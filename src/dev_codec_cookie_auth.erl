@@ -76,7 +76,10 @@ verify(RawBase, Request, RawOpts) ->
             ),
         % Parse the secret and name from the request message, favoring the name
         % provided in the request.
-        {ok, RequestCookieMsg} = dev_codec_cookie:from(Request, Request, RawOpts),
+        RequestCookieMsg = case dev_codec_cookie:from(Request, Request, RawOpts) of
+            {ok, Msg} -> Msg;
+            not_found -> #{}
+        end,
         {ok, EncSecret} ?= hb_maps:find(<<"secret">>, RequestCookieMsg, Opts),
         Secret = hb_util:decode(EncSecret),
         {ok, Name} ?=

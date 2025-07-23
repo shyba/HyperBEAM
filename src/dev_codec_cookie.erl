@@ -219,7 +219,8 @@ from(CookiesMsg, Req, Opts) when is_binary(CookiesMsg) ->
 from(CookiesMsg, _Req, _Opts) when is_list(CookiesMsg) ->
     {ok, maps:from_list(lists:map(fun from_line/1, CookiesMsg))};
 from(#{ <<"cookie">> := Cookie}, Req, Opts) ->
-    from(Cookie, Req, Opts).
+    from(Cookie, Req, Opts);
+from(_Msg, _Req, _Opts) -> not_found.
 
 %% @doc Convert a cookie header line into a cookie message.
 from_line(Line) ->
